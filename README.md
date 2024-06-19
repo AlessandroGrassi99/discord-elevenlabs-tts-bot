@@ -51,7 +51,7 @@ This repository contains a simple Discord bot that integrates with Eleven Labs' 
 
 Run the bot using the following command:
 ```bash
-python bot.py
+python main.py
 ```
 
 ## Commands
