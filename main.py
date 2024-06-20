@@ -24,6 +24,7 @@ class VoiceManager:
     def __init__(self, api_key: str):
         self.api_key = api_key
         self.voice_cache = []
+        self.user_voices = {}
         self.session = requests.Session()
 
     def fetch_voices(self):
@@ -77,7 +78,7 @@ class MyBot(commands.Bot):
     async def setup_hook(self):
         self.tree.copy_global_to(guild=MY_GUILD)
         await self.tree.sync(guild=MY_GUILD)
-        self.update_voice_cache.start(update_default=True)
+        self.update_voice_cache.start()
 
     @tasks.loop(minutes=2)
     async def update_voice_cache(self):
@@ -147,13 +148,14 @@ async def ensure_voice_connection(interaction: discord.Interaction):
 @bot.tree.command()
 async def voice(interaction: discord.Interaction, voice: str):
     """Set user's voice"""
+    await interaction.response.defer()
     global_name = str(interaction.user.global_name)
     selected_voice = next((v for v in bot.voice_manager.voice_cache if v['name'].lower() == voice.lower()), None)
     if not selected_voice:
-        await interaction.response.send_message('No voice found.')
+        await interaction.followup.send('No voice found.')
         return
     bot.voice_manager.user_voices[global_name] = selected_voice
-    await interaction.response.send_message(f"Voice set to {selected_voice['name']}")
+    await interaction.followup.send(f"Voice set to {selected_voice['name']}")
 
 
 @voice.autocomplete('voice')

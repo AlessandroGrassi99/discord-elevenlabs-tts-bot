@@ -1,5 +1,5 @@
 aiohttp==3.9.5
-discord.py==2.3.2
+discord.py[voice]==2.3.2
 loguru==0.7.2
 python-dotenv==1.0.1
 requests==2.32.3
